@@ -1,0 +1,62 @@
+<html lang="en">
+  <head>
+    <title>ES6 Generators</title>
+    <style>
+        h1, p { font-family: sans-serif; font-weight: normal}
+    </style>
+  </head>
+  <body>
+    <h1>Practicing async operations with ES6 Generators</h1>
+    <p>See console for demo</p>
+
+    <script>
+
+        const sampleArray = [
+            '1st el',
+            '2nd el',
+            '3rd el',
+            '4th el',
+        ];
+
+        // v1: anync operation with setTimeout only
+        const asyncFunc1 = (msg) => {
+            setTimeout(
+                    () => { 
+                        console.log(msg); 
+                        ref.next();
+                    },
+                1000
+                );
+        }
+
+        // v2: anync operation with custom Promise that uses setTimeout
+        const asyncFunc2 = (msg) => {
+            customFetch(msg).then((result) => {
+                console.log(result);
+                ref.next()
+            });
+        }
+
+        function customFetch(loLog) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve(loLog);
+                }, 1000);
+            });
+        }
+
+        // choose anyncFunc1 || asyncFunc2 in for loop
+        function* main(array) {
+            // yield is unavailable inside forEach, so i use for...of
+            for (item of array) { 
+                yield asyncFunc2(item);   
+            }
+        }
+
+        // save ref for generator func and make initial call
+        const ref = main(sampleArray);
+        ref.next();
+
+    </script>
+  </body>
+</html>
